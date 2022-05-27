@@ -1,4 +1,6 @@
-[<img src="src/img/Banner_Github.png" class="img-fluid img-thumbnail mx-auto d-block" onerror="removeSRC(this)">](https://discord.gg/3zGDVZwuw5)
+<p align="center">
+    [<img src="src/img/Banner_Github.png" class="img-fluid img-thumbnail mx-auto d-block" onerror="removeSRC(this)">](https://discord.gg/3zGDVZwuw5)
+</p>
 
 <div class="d-flex mb-2">
 <div class="mx-auto d-block">  
@@ -28,6 +30,7 @@ Sou um bot de multi-propósito do Discord Open Source que é usado majoritariame
 - Tenho funções de Web Scraping pra livrar qualquer um de anúncios irritantes.
 - Rolo dados, posto climas aleatórios de RPG's, administro HP, dano, dinheiro em jogo e muito, muito mais!
 
+<hr class="mt-1">
 ### Servidor SDA
 
 O Somas do Amanhã (SDA) é um servidor de RPG Literário, vulgo RPT (Roleplay por Texto) que utiliza de uma ferramenta automatizada, o SDA BOT para administrar sistemas usualmente administrados à mão e entregar uma experiência de RP sem igual para todos os usuários. 
