@@ -29,6 +29,7 @@ Sou um bot de multi-propósito do Discord Open Source que é usado majoritariame
 - Rolo dados, posto climas aleatórios de RPG's, administro HP, dano, dinheiro em jogo e muito, muito mais!
 
 <hr class="mt-1">
+
 ### Servidor SDA
 
 O Somas do Amanhã (SDA) é um servidor de RPG Literário, vulgo RPT (Roleplay por Texto) que utiliza de uma ferramenta automatizada, o SDA BOT para administrar sistemas usualmente administrados à mão e entregar uma experiência de RP sem igual para todos os usuários. 
