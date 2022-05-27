@@ -1,6 +1,4 @@
-<p align="center">
-    [<img src="src/img/Banner_Github.png" class="img-fluid img-thumbnail mx-auto d-block" onerror="removeSRC(this)">](https://discord.gg/3zGDVZwuw5)
-</p>
+[<img src="src/img/Banner_Github.png" class="img-fluid img-thumbnail mx-auto d-block" onerror="removeSRC(this)">](https://discord.gg/3zGDVZwuw5)
 
 <div class="d-flex mb-2">
 <div class="mx-auto d-block">  
