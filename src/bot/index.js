@@ -1,5 +1,4 @@
-const { Client, GuildMember, Formatters, MessageAttachment, } = require('discord.js');
-const { user } = require('pg/lib/defaults');
+const { Client, GuildMember, Formatters, MessageAttachment, TextChannel, Message } = require('discord.js');
 const client = new Client({ intents: 32767 });
 const config = require('../../config.json');
 const database = require('./db');
@@ -39,7 +38,7 @@ client.once('ready', () => {
  */
 client.on('guildMemberAdd', async member => {
 
-    const cachedInvites = guildInvites.get(member.guild.id); 
+    const cachedInvites = guildInvites.get(member.guild.id);
     const newInvites = await member.guild.invites.fetch();
 
     const memberCount = member.guild.memberCount;
@@ -72,8 +71,8 @@ const mediaChannel = '977083633435279390'; // Canal de mídia.
  * @param {Object} msg A mensagem que foi postada.
  * @returns {Object} O objeto da mensagem.
  */
-client.on('messageCreate', msg => {
-    
+client.on('messageCreate', async msg => {
+
     /**
      * Essa script administra as apresentações do servidor SDA.
      */
@@ -87,35 +86,39 @@ client.on('messageCreate', msg => {
             msg.guild.members.fetch(msg.author.id).then((member) => member.roles.add(presentationRole));
 
             msg.reply(`Sua apresentação foi registrada com sucesso, ${Formatters.userMention(msg.author.id)} e você ganhou o cargo ${Formatters.roleMention(presentationRole)}`)
-            .then( (msgObj) => setInterval(() => msgObj.delete(), 10000)).catch(err => console.log('Erro, a mensagem não existe: ' + err));
+                .then((msgObj) => setInterval(() => msgObj.delete(), 10000)).catch(err => console.log('Erro, a mensagem não existe: ' + err));
 
         }).catch(err => {
 
-            if(err.name === 'SequelizeUniqueConstraintError') msg.reply({
+            if (err.name === 'SequelizeUniqueConstraintError') msg.reply({
                 ephemeral: true,
                 content: `Você já se apresentou. Por favor, não escreva mais nada neste canal.`
             }).then((msgObj) => setInterval(() => msgObj.delete(), 10000)).catch(msgErr => console.log('Erro, a mensagem não existe: ' + msgErr));
 
         });
 
-    /**
-     * Essa script administra as imagens e links enviados em canais errados. 
-     */
+        /**
+         * Essa script administra as imagens e links enviados em canais errados. 
+         */
     } else if (msg.channel.id === generalChannel && msg.attachments.size >= 1) {
-        setInterval(() => {
+        setTimeout(() => {
             msg.attachments.forEach(attachment => {
                 const media = new MessageAttachment(attachment.url);
 
                 msg.guild.channels.cache.get(mediaChannel).send({
                     content: `Imagem enviada em ${Formatters.channelMention(generalChannel)} por ${Formatters.userMention(msg.author.id)}`,
-                    attachments: [media]
+                    files: [media]
                 })
-                .then(mediaMsg => {BulkEmoji(mediaMsg, ['✅', '❌']);}).catch(err => console.log('Não consegui reagir a mensagem: ' + err))
-                .then(() => msg.delete()).catch(err => console.log('Erro, a mensagem não existe: ' + err));
+                    .then(mediaMsg => { BulkEmoji(mediaMsg, ['✅', '❌']); }).catch(err => console.log('Não consegui reagir a mensagem: ' + err))
+                    .then(() => msg.delete()).catch(err => console.log('Erro, a mensagem não existe: ' + err));
             });
 
         }, 60 * 1000);
     };
+
+    if (msg.author.id === msg.guild.ownerId && msg.content === 'test') {
+        clearMessages(msg.channel, { before: msg.id, limit:100}).then(value => msg.reply(value));
+    }
 
 });
 
@@ -123,12 +126,12 @@ client.on('messageCreate', msg => {
  * Envia uma mensagem na hora que o usuário sai do servidor e deleta a apresentação dele do chat de apresentações.
  * @param {GuildMember} member Membro que saiu da guilda.
  */
- client.on('guildMemberRemove', member => {
+client.on('guildMemberRemove', member => {
 
-    database.presentation.findOne({where: {userID: BigInt(member.id)}})
+    database.presentation.findOne({ where: { userID: BigInt(member.id) } })
         .then(presentation => {
-        member.guild.channels.fetch(presentationChannel)
-            .then( (channel) => channel.messages.delete(presentation.get('msgID') ) ).catch(err => console.log('Erro, a mensagem de apresentação não existe: ' + err));
+            member.guild.channels.fetch(presentationChannel)
+                .then((channel) => channel.messages.delete(presentation.get('msgID'))).catch(err => console.log('Erro, a mensagem de apresentação não existe: ' + err));
         });
 
     loginoutChannel.send(`🟥 O usuário ${member.user.username}, de ID ${member.id} com \`${msToTime(Date.now() - member.joinedTimestamp)}\` de servidor saiu.`);
@@ -141,7 +144,7 @@ client.login(config.token);
 /**
  * Função para converter milissegundos em duração.
  * @param {number} ms Tempo em milisegundos.
- * @returns Retorna o tempo formatado em duração humanamente legível.
+ * @returns {string} Retorna o tempo formatado em duração humanamente legível.
  */
 function msToTime(ms) {
     let seconds = (ms / 1000).toFixed(1);
@@ -152,7 +155,7 @@ function msToTime(ms) {
     if (seconds < 60) return seconds + " Segundos";
     else if (minutes < 60) return minutes + " Minutos";
     else if (hours < 24) return hours + " Horas";
-    else return days + " Dias"
+    else return days + " Dias";
 }
 /**
  * Função para adicionar multiplas reações em uma mensagem.
@@ -162,7 +165,78 @@ function msToTime(ms) {
  * @returns {Promise} O objeto da reação da mensagem.
  */
 function BulkEmoji(msg, Array) {
-    let i = 1;
-    for (each of Array) {setInterval( () => {msg.react(each); i++;}, i * 2000)}; 
+    for (each of Array) msg.react(each);
 }
-  
+
+/**
+ * @author sum#0117 <github.com/sum117>
+ * @license MIT
+ * @function clearMessages Função para limpeza em massa de mensagens do Discord que já estão velhas.
+ * @param {!TextChannel} channel O canal onde a função será executada.
+ * @param {{limit: number? , before: number?, after: number?, around:number?, images:boolean?}=} options Opções de remoção.
+ * 
+ * @returns {Promise<string>} `Canais` deletados.
+ */
+function clearMessages(channel, options) {
+    /**
+     * @constant progressMessage - Mensagem enviada quando a função é iniciada.
+     */
+    const progressMessage = channel.send('Iniciando varredura. Aguarde, isso pode demorar um pouco...\n⏲️ [🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥]\n' + Formatters.bold('NÃO DELETE ESTA MENSAGEM.'));
+
+    /** @var fullCount - Número total de mensagens a serem deletadas. */
+    let fullCount = 0;
+    /** @var barHandler - Número responsável de indicar a mudança da barra de carregamento. */
+    let barHandler = 0;
+    const startTime = Date.now();
+    return new Promise(resolve => {
+
+        if (!channel) throw new Error('O canal enviado não é válido');
+
+        progressMessage.then(pmsg => {
+            channel.messages.fetch({
+                limit: options.limit || 10,
+                before: options.before || undefined,
+                after: options.after || undefined,
+                around: options.around || undefined,
+            }).then(collection => {
+                let regex = pmsg.content.match(/🟥/g);
+                let bool = m => m;
+                if (options.images) bool = m => {
+                    if (m.attachments.size >= 1) 
+                    {
+                        return true 
+                    } else {
+                        return resolve(pmsg.edit('Não há mensagens para serem deletadas.'));
+                    }
+                };
+                collection.filter(bool).forEach(msg => {
+                    fullCount++
+                    setTimeout(() => {
+                        barHandler++
+                        //Barra de Progresso.
+                        if (!pmsg) throw new Error('A mensagem de progresso foi deletada ou é inválida.');
+                        /**
+                         * @var progress Um décimo da coleção (Parcela para indicar a barra de carregamento)
+                         */
+                        let progress = (fullCount/10);
+                        if (barHandler >= progress) {
+                            for (let i = 0; i <= Math.floor(barHandler - progress); i++) {
+                                regex.pop();
+                                regex.unshift('🟩');
+                                let newMsg = regex.join('');
+                            
+                                pmsg.edit(pmsg.content.replace(/\[.*\]/, `[${newMsg}]`));
+                                if (!newMsg.includes('🟥')) return resolve(`Processo finalizado. Foram deletadas ${fullCount} mensagens. Duração ${msToTime(Date.now() - startTime)}`);
+                                barHandler = 0;
+                            }
+                        };
+                        //Deletando as mensagens.
+                        msg.delete().catch(err => console.log(err));
+                    }, fullCount * 10 * 1000);
+                });
+            });
+        })
+    });
+};
+
+
