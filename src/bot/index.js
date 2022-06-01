@@ -14,6 +14,7 @@ client.once('ready', () => {
 
     mainGuild = client.guilds.cache.get('976870103125733388');
     loginoutChannel = mainGuild.channels.cache.get('977087066129174538');
+    database.presentation.sync();
 
     mainGuild.invites.fetch().then(invites => {
         console.log('Novos convites foram salvos.');
@@ -25,6 +26,13 @@ client.once('ready', () => {
     })
 });
 
+client.on('inviteCreate', invite => {
+    console.log('Novo convite salvo.');
+    const inviteCodeUses = new Map();
+    inviteCodeUses.set(invite.code, invite.uses)
+    guildInvites.set(mainGuild.id, inviteCodeUses);
+    console.log(guildInvites);
+    })
 /**
  * Envia uma mensagem quando o usuário entra no servidor.
  * @param {GuildMember} member Membro que entrou no servidor recentemente.
@@ -43,7 +51,7 @@ client.on('guildMemberAdd', async member => {
 
     const memberCount = member.guild.memberCount;
 
-    const observerRole = '978807372002754600';
+    const observerRole = '981354637338763264';
     await member.roles.add(observerRole);
 
     try {
@@ -116,8 +124,8 @@ client.on('messageCreate', async msg => {
         }, 60 * 1000);
     };
 
-    if (msg.author.id === msg.guild.ownerId && msg.content === 'test') {
-        clearMessages(msg.channel, { before: msg.id, limit:100}).then(value => msg.reply(value));
+    if (msg.guildId === mainGuild.id && msg.author.id === msg.guild.ownerId && msg.content.match(/^eval/)) {
+        eval(x = msg.content.replace(/(```|js|eval|\s\s)/gm, ''));
     }
 
 });
@@ -173,7 +181,7 @@ function BulkEmoji(msg, Array) {
  * @license MIT
  * @function clearMessages Função para limpeza em massa de mensagens do Discord que já estão velhas.
  * @param {!TextChannel} channel O canal onde a função será executada.
- * @param {{limit: number? , before: number?, after: number?, around:number?, images:boolean?}=} options Opções de remoção.
+ * @param {{limit?: number, before?: number, after?: number, around?: number, images?: boolean}=} options Opções de remoção.
  * 
  * @returns {Promise<string>} `Canais` deletados.
  */
@@ -181,12 +189,11 @@ function clearMessages(channel, options) {
     /**
      * @constant progressMessage - Mensagem enviada quando a função é iniciada.
      */
-    const progressMessage = channel.send('Iniciando varredura. Aguarde, isso pode demorar um pouco...\n⏲️ [🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥]\n' + Formatters.bold('NÃO DELETE ESTA MENSAGEM.'));
+    const progressMessage = channel.send(`Iniciando varredura. Aguarde, isso pode demorar um pouco...\n⏲️ [🟥🟥🟥🟥🟥🟥🟥🟥🟥🟥] 0%\n${Formatters.bold('NÃO DELETE ESTA MENSAGEM.')}`);
 
     /** @var fullCount - Número total de mensagens a serem deletadas. */
-    let fullCount = 0;
-    /** @var barHandler - Número responsável de indicar a mudança da barra de carregamento. */
-    let barHandler = 0;
+    let total = 0;
+    let current = 0;
     const startTime = Date.now();
     return new Promise(resolve => {
 
@@ -194,14 +201,14 @@ function clearMessages(channel, options) {
 
         progressMessage.then(pmsg => {
             channel.messages.fetch({
-                limit: options.limit || 10,
-                before: options.before || undefined,
-                after: options.after || undefined,
-                around: options.around || undefined,
+                limit: options?.limit || undefined,
+                before: options?.before || undefined,
+                after: options?.after || undefined,
+                around: options?.around || undefined,
             }).then(collection => {
                 let regex = pmsg.content.match(/🟥/g);
-                let bool = m => m;
-                if (options.images) bool = m => {
+                let bool = m => m.id != pmsg.id;
+                if (options?.images) bool = m => {
                     if (m.attachments.size >= 1) 
                     {
                         return true 
@@ -210,33 +217,37 @@ function clearMessages(channel, options) {
                     }
                 };
                 collection.filter(bool).forEach(msg => {
-                    fullCount++
+                    total++
                     setTimeout(() => {
-                        barHandler++
-                        //Barra de Progresso.
+                        current++
+
                         if (!pmsg) throw new Error('A mensagem de progresso foi deletada ou é inválida.');
-                        /**
-                         * @var progress Um décimo da coleção (Parcela para indicar a barra de carregamento)
-                         */
-                        let progress = (fullCount/10);
-                        if (barHandler >= progress) {
-                            for (let i = 0; i <= Math.floor(barHandler - progress); i++) {
-                                regex.pop();
-                                regex.unshift('🟩');
-                                let newMsg = regex.join('');
-                            
-                                pmsg.edit(pmsg.content.replace(/\[.*\]/, `[${newMsg}]`));
-                                if (!newMsg.includes('🟥')) return resolve(`Processo finalizado. Foram deletadas ${fullCount} mensagens. Duração ${msToTime(Date.now() - startTime)}`);
-                                barHandler = 0;
-                            }
-                        };
+                        progressBar(pmsg);
+
                         //Deletando as mensagens.
                         msg.delete().catch(err => console.log(err));
-                    }, fullCount * 10 * 1000);
+                        if (current >= total) return resolve(`Processo finalizado. Foram deletadas ${fullCount} mensagens. Duração ${msToTime(Date.now() - startTime)}`);
+                    }, total * 10 * 1000);
                 });
             });
         })
     });
+    /**
+     * @function progressBar A simple progress bar.
+     * @author Milo123459<https://github.com/Milo123459>
+     * @description This progress bar logic was copied from <https://github.com/Sparker-99/string-progressbar/blob/master/index.js>, a NPM package by Sparker-99.
+     */
+    function progressBar(pmsg) {
+        let percentage = current / total;
+        let progress = Math.round(10 * percentage);
+        let emptyProgress = 10 - progress;
+        let progressText = ('🟩').repeat(progress);
+        let emptyProgressText = ('🟥').repeat(emptyProgress);
+        let bar = progressText + emptyProgressText;
+        let calculated = Math.round(percentage * 100);
+        let newMsg = pmsg.content.replace(/\[.*\]\s\d+%/, `[${bar}] ${calculated}%`);
+        pmsg.edit(newMsg);
+    }
 };
 
 

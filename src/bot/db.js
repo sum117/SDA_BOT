@@ -1,6 +1,6 @@
 
 const Sequelize = require('sequelize')
-const database = new Sequelize('sda', 'sum', 'admin', {
+const database = new Sequelize('sda', 'postgres', 'admin', {
     host: 'localhost',
     dialect: 'postgres',
 })
