@@ -1,4 +1,4 @@
-const { client, guildInvites} = require("..");
+const {guildInvites} = require("..");
 
 module.exports = {
     name: 'inviteCreate', 
