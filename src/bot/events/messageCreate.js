@@ -1,15 +1,15 @@
-const { Formatters, MessageAttachment } = require('discord.js');
+const { Formatters, MessageAttachment, Message } = require('discord.js');
 const database = require('../db');
 const { BulkEmoji } = require("../functions");
-const { client, presentationChannel, presentationRole, generalChannel, mediaChannel} = require("..");
+const {presentationChannel, presentationRole, generalChannel, mediaChannel} = require("..");
 
-/**
- * Evento de criação de mensagens.
- * @param {Object} msg A mensagem que foi postada.
- * @returns {Object} O objeto da mensagem.
- */
 module.exports = { 
-    name: 'messageCreate', 
+    name: 'messageCreate',
+    /**
+     * Evento de criação de mensagens.
+     * @param {Message} msg A mensagem que foi postada.
+     * @returns {Object} O objeto da mensagem.
+     */
     async execute(msg) {
         const mainGuild = msg.guild;
         /**

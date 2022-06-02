@@ -1,5 +1,5 @@
 const { Formatters } = require('discord.js');
-const { client, guildInvites} = require("..");
+const {guildInvites} = require("..");
 
 /**
  * Envia uma mensagem quando o usuário entra no servidor.

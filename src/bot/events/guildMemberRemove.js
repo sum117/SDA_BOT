@@ -1,6 +1,6 @@
 const database = require('../db');
 const { msToTime } = require("../functions");
-const { client, presentationChannel} = require("..");
+const {presentationChannel} = require("..");
 
 /**
  * Envia uma mensagem na hora que o usuário sai do servidor e deleta a apresentação dele do chat de apresentações.
