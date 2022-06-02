@@ -11,12 +11,11 @@ const { client, presentationChannel, presentationRole, generalChannel, mediaChan
 module.exports = { 
     name: 'messageCreate', 
     async execute(msg) {
-
+        const mainGuild = msg.guild;
         /**
          * Essa script administra as apresentações do servidor SDA.
          */
         if (msg.channel.id === presentationChannel) {
-            const mainGuild = msg.guild;
 
             database.presentation.create({
                 userID: BigInt(msg.author.id),
