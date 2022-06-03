@@ -358,13 +358,13 @@ function createCharSelectors() {
                 label: 'Fantasma Vermelho',
                 description: 'Uma nova chance com a morte do Subtrato.',
                 value: 'vermelho',
-                emoji: '<:fantasmaBranco:982092065599029268>'
+                emoji: '<:fantasmaVermelho:982092065989074994>'
             },
             {
                 label: 'Fantasma Branco',
                 description: 'Uma nova chance através de favores.',
                 value: 'branco',
-                emoji: '<:fantasmaVermelho:982092065989074994>'
+                emoji: '<:fantasmaBranco:982092065599029268>'
             }
         ])
     ]
