@@ -1,6 +1,3 @@
-const { Formatters, MessageActionRow, MessageSelectMenu, Modal, TextInputComponent, TextChannel, BaseCommandInteraction, Message} = require('discord.js');
-const { options } = require('pg/lib/defaults');
-
 // Minhas funções pra facilitar o meu trabalho.
 /**
  * Função para converter milissegundos em duração.
