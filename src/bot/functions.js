@@ -1,4 +1,4 @@
-const { Formatters, MessageEmbed, MessageActionRow, MessageSelectMenu, Modal, TextInputComponent, TextChannel, BaseCommandInteraction, Message } = require('discord.js');
+const { Formatters, MessageEmbed, MessageActionRow, MessageSelectMenu, Modal, TextInputComponent, TextChannel, BaseCommandInteraction, Message} = require('discord.js');
 const getColors = require('get-image-colors');
 const { options } = require('pg/lib/defaults');
 
@@ -190,7 +190,7 @@ exports.createDescEmbed = createDescEmbed;
  * @param {BaseCommandInteraction} interaction A interação que gerará o formulário.
  * @returns {Modal} Retorna um formulário para preenchimento.
  */
-async function createForm(interaction) {
+function createForm() {
 
     const form = new Modal()
         .setCustomId('ficha')
@@ -247,7 +247,7 @@ async function createForm(interaction) {
         form.addComponents(actionRow);
     });
 
-    return await interaction.showModal(form);
+    return form;
 }
 exports.createForm = createForm;
 /**
@@ -318,6 +318,7 @@ function createCharSelectors() {
         ]),
     new MessageSelectMenu()
         .setCustomId('genero')
+        .setDisabled(true)
         .setPlaceholder('Escolha seu Gênero')
         .setMinValues(1)
         .setMaxValues(1)
@@ -344,6 +345,7 @@ function createCharSelectors() {
         ]),
     new MessageSelectMenu()
         .setCustomId('purgatorio')
+        .setDisabled(true)
         .setPlaceholder('Escolha seu Purgatório')
         .setMinValues(1)
         .setMaxValues(1)
@@ -369,7 +371,6 @@ function createCharSelectors() {
         ])
     ]
     const actionRows = selectors.map(field => new MessageActionRow().addComponents(field));
-
     return actionRows;
 }
 exports.createCharSelectors = createCharSelectors;
