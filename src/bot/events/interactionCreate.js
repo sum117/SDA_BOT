@@ -1,6 +1,7 @@
 const { Interaction, InteractionCollector} = require("discord.js");
 const { createForm, createCharSelectors } = require('../functions')
 const fichaMap = new Map();
+const sessionChest = new Map();
 module.exports = {
     name: 'interactionCreate',
     /**
@@ -25,10 +26,12 @@ module.exports = {
             cachedChoices.set(interaction.customId, interaction.values[0]);
             fichaMap.set(interaction.userId, cachedChoices);
             console.log(cachedChoices);
-            if (cachedChoices.size === 3) return interaction.showModal(createForm());
+            if (cachedChoices.size === 3) { 
+                sessionChest.set(interaction.user.id, cachedChoices);
+                fichaMap.delete(interaction.user.id);
+                return interaction.showModal(createForm());
+            }
             return choiceResponse();
-            
-
         }
 
         function choiceResponse() {
