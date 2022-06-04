@@ -1,15 +1,11 @@
-const { Interaction, InteractionCollector} = require("discord.js");
-const { createForm, createCharSelectors } = require('../functions')
+const { createForm } = require('../../../functions')
 const fichaMap = new Map();
 const sessionChest = new Map();
+
 module.exports = {
-    name: 'interactionCreate',
-    /**
-     * @param {Interaction} interaction A interação que disparou a execução do evento.
-     */
-    async execute(interaction) {
-        
-        if (!interaction.isSelectMenu()) return;
+    type: 'MESSAGE_COMPONENT',
+    execute(interaction) {
+        if (!interaction.isSelectMenu() && !interaction.channelId.includes('977090435845603379')) return;
 
         if (!fichaMap.get(interaction.user.id)) {
             const firstChoices = new Map([[interaction.customId, interaction.values[0]]]);
@@ -26,7 +22,7 @@ module.exports = {
             cachedChoices.set(interaction.customId, interaction.values[0]);
             fichaMap.set(interaction.userId, cachedChoices);
             console.log(cachedChoices);
-            if (cachedChoices.size === 3) { 
+            if (cachedChoices.size === 3) {
                 sessionChest.set(interaction.user.id, cachedChoices);
                 fichaMap.delete(interaction.user.id);
                 return interaction.showModal(createForm());
@@ -37,11 +33,9 @@ module.exports = {
         function choiceResponse() {
             const optionLabel = interaction.component.options.find(option => option.value === interaction.values[0]).label;
             return interaction.reply({
-                content: 'Selecionei ' + optionLabel + ', continue!', 
+                content: 'Selecionei ' + optionLabel + ', continue!',
                 ephemeral: true
             });
         }
     }
 }
-
-
