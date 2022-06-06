@@ -1,4 +1,5 @@
 const { Formatters, MessageEmbed, MessageActionRow, MessageSelectMenu, Modal, TextInputComponent, TextChannel, BaseCommandInteraction, Message} = require('discord.js');
+const {SlashCommandBuilder} = require('@discordjs/builders')
 const getColors = require('get-image-colors');
 const { options } = require('pg/lib/defaults');
 
@@ -69,14 +70,17 @@ function clearMessages(channel, options) {
             }).then(collection => {
                 let regex = pmsg.content.match(/🟥/g);
                 let bool = m => m.id != pmsg.id;
-                if (options?.images)
+                if (options?.images) {
                     bool = m => {
-                        if (m.attachments.size >= 1) {
-                            return true;
+                        if (!(m.attachments.size >= 1 || m.content.match(/https?/g))) {
+                            if(m.id != pmsg.id) {
+                                return true;
+                            }
                         } else {
-                            return resolve(pmsg.edit('Não há mensagens para serem deletadas.'));
+                            return resolve('Não há mensagens para serem deletadas.');
                         }
                     };
+                };
                 collection.filter(bool).forEach(msg => {
                     total++;
                     setTimeout(() => {
@@ -327,20 +331,20 @@ function createCharSelectors() {
                 label: 'Masculino',
                 description: 'Foi somado à Imprevia com genitalia masculina.',
                 value: 'masculino',
-                emoji:'♂️'
+                emoji: '♂️'
 
             },
             {
                 label: 'Feminino',
                 description: 'Foi somado à Imprevia com genitalia feminina.',
                 value: 'feminino',
-                emoji:'♀️'
+                emoji: '♀️'
             },
             {
                 label: 'Descubra',
                 description: 'O que eu deveria colocar aqui mesmo...?',
                 value: 'genderless',
-                emoji:'👽'
+                emoji: '👽'
             }
         ]),
     new MessageSelectMenu()
@@ -380,8 +384,8 @@ exports.createCharSelectors = createCharSelectors;
  * @param {number?} channelId o id do canal onde o buffer deve ser enviado.
  */
 async function saveToFile(msg, channelId) {
-    let msgs = await msg.channel.messages.fetch();
-    let array = msgs.reverse().filter(msg => msg != msgs.last()).map(msg => msg.content);
+    let msgs = await msg.channel.messages.fetch({limit:100});
+    let array = msgs.reverse().filter(msg => msg != msgs.last()).map(msg =>`${msg.author.username}: ${msg.content}`);
     const file = Buffer.from(array.join('\n\n'));
     const response = await msg.guild.channels.cache.get(channelId ?? msg.channel.id).send({
         content: `Salvei todas as mensagens de ${Formatters.channelMention(msg.channel.id)} que consegui encontrar e coloquei dentro deste arquivo...`,
@@ -390,3 +394,52 @@ async function saveToFile(msg, channelId) {
     return response;
 }
 exports.saveToFile = saveToFile;
+/**
+ * @description Função para a criação simples de um seletor do Discord.
+ * @param {Array<String, {label: String, description:String, value?: String, emoji:String}>} argsArray
+ * @returns {Array<MessageActionRow>} Um seletor com diversas opções.
+ */
+function createRoleSelectors(argsArray) {
+    let rows = [];
+    for (each of argsArray) {
+        let i = 0;
+        const category = each[0];
+
+        const selector = new MessageSelectMenu()
+            .setCustomId(category)
+            .setPlaceholder(category);
+
+        for (each of each[1]) {
+            i++
+            selector.addOptions([
+                {
+                    label: each.label.charAt(0).toUpperCase() + each.label.slice(1),
+                    description: each.description,
+                    value: each?.value ?? each.label.toLowerCase(),
+                    emoji: each.emoji,
+                }
+            ]);
+        };
+         rows.push(new MessageActionRow().addComponents(selector.setMaxValues(i)));
+    };
+    return rows;
+}
+exports.createRoleSelectors = createRoleSelectors;
+
+function spawnHentai() {
+    const array = ['ass', 'bdsm', 'blowjob', 'cum', 'doujin', 'feet', 'femdom', 'foxgirl', 'gifs', 'glasses', 'hentai', 'netorare', 'maid', 'masturbation', 'orgy', 'panties', 'pussy', 'school', 'succubus', 'tentacles', 'thighs', 'uglyBastard', 'uniform', 'yuri', 'zettaiRyouiki'];
+    const command = new SlashCommandBuilder()
+        .setName('hentai')
+        .setDescription('Gere imagens hentai no canal NSFW.')
+        .addStringOption(option => {
+            option.setName('categoria')
+                .setDescription('Categoria do hentai')
+                .setRequired(true);
+            array.forEach(one => {
+                option.addChoices({name: one, value:one})
+            });
+            return option;
+        });
+    return command.toJSON();
+}
+exports.spawnHentai = spawnHentai;

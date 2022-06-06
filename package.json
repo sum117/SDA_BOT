@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "akaneko": "^5.2.3",
     "discord.js": "^13.7.0",
     "get-image-colors": "^4.0.1",
     "pg": "^8.7.3",

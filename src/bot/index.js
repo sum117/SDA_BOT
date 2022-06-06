@@ -1,10 +1,18 @@
-const { Client } = require('discord.js');
+const { Client, Options} = require('discord.js');
 const fs = require('fs');
-const client = new Client({ intents: 32767 });
+const client = new Client({
+	intents: 32767, 
+	makeCache: Options.cacheWithLimits({
+		...Options.defaultMakeCacheSettings, 
+		MessageManager: 1000
+	})
+})
 exports.client = client;
+
 const config = require('../../config.json');
 
-
+const activityCache = new Map(); // Mapa que salva os jogadores ativos das ultimas 8 horas.
+exports.activityCache = activityCache;
 const guildInvites = new Map(); // Mapa para guardar o ID do servidor e os usos dos invites.
 exports.guildInvites = guildInvites;
 
