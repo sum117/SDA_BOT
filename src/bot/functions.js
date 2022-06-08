@@ -19,7 +19,6 @@ function msToTime(ms) {
     else
         return days + " Dias";
 }
-exports.msToTime = msToTime;
 /**
  * Função para adicionar multiplas reações em uma mensagem.
  * @param {Object} msg O objeto da mensagem que será reagida.
@@ -31,7 +30,6 @@ function BulkEmoji(msg, Array) {
     for (each of Array)
         msg.react(each);
 }
-exports.BulkEmoji = BulkEmoji;
 /**
  * @author sum#0117 <github.com/sum117>
  * @license MIT
@@ -108,7 +106,6 @@ function clearMessages(channel, options) {
         pmsg.edit(newMsg);
     }
 }
-exports.clearMessages = clearMessages;
 ;
 
 /**
@@ -175,7 +172,6 @@ function createForm() {
 
     return form;
 }
-exports.createForm = createForm;
 /**
  * @description Função para gerar seletor de personagens feita para economizar espaço em outros arquivos.
  * @returns {MessageActionRow} Retorna uma array de action rows com três seletores para a ficha de personagem;
@@ -299,7 +295,6 @@ function createCharSelectors() {
     const actionRows = selectors.map(field => new MessageActionRow().addComponents(field));
     return actionRows;
 }
-exports.createCharSelectors = createCharSelectors;
 /**
  * @description Salva as últimas mensagens de um canal pra um arquivo de texto.
  * @param {Message} msg mensagem que receberá uma resposta com o resultado da função. 
@@ -315,4 +310,5 @@ async function saveToFile(msg, channelId) {
     });
     return response;
 }
-exports.saveToFile = saveToFile;
+
+module.exports = saveToFile, msToTime, BulkEmoji, clearMessages, createForm, createCharSelectors;

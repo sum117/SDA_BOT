@@ -5,12 +5,12 @@ const sessionChest = new Map();
 module.exports = {
     type: 'MESSAGE_COMPONENT',
     execute(interaction) {
-        if (!interaction.isSelectMenu() && !interaction.channelId.includes('977090435845603379')) return;
+        if (!interaction.isSelectMenu() && !interaction.channelId.includes(registerChannel)) return;
 
         if (!fichaMap.get(interaction.user.id)) {
             const firstChoices = new Map([[interaction.customId, interaction.values[0]]]);
             fichaMap.set(interaction.user.id, firstChoices);
-            console.log(fichaMap)
+            console.log(fichaMap);
             return choiceResponse();
         } else {
             /**

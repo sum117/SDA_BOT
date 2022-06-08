@@ -1,8 +1,11 @@
-//TODO
-//const mediachannel;
-//const generalChannel;
+const { mediaChannel, generalChannel } = require('../../../../../config.json').channels
+const { Formatters, MessageAttachment } = require('discord.js');
+const BulkEmoji = require('../../../functions');
+
 module.exports = {
     type: 'prefixless',
+    name: 'mediaModerator',
+    description: 'Um comando automático do servidor que coloca as mensagens em seus devidos lugares.',
     execute(msg) {
         if (msg.channel.id === generalChannel && (msg.attachments.size >= 1 || msg.content.match(/https?/g))) {
             setTimeout(() => {

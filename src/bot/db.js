@@ -1,6 +1,6 @@
-
+const config = require('../../config.json')
 const Sequelize = require('sequelize')
-const database = new Sequelize('sda', 'postgres', 'admin', {
+const database = new Sequelize(config.database.name,config.database.user, config.database.password, {
     host: 'localhost',
     dialect: 'postgres',
 })
@@ -17,10 +17,5 @@ const presentation = database.define('presentation', {
     },
 });
 
-module.exports = {
-    Sequelize: Sequelize,
-    database: database,
-    presentation: presentation,
-}
-
+module.exports = {presentation}
 

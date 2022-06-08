@@ -1,7 +1,9 @@
 const getColors = require('get-image-colors');
+const { Formatters, MessageEmbed } = require('discord.js')
 module.exports = {
     type: 'prefix',
     prefix: 'embed',
+    description: 'Comando de moderador para gerar descrições de canais.',
     execute(msg) {
 
         return new Promise(resolve => {
