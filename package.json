@@ -1,4 +1,7 @@
 {
+  "name": "sda-bot",
+  "description": "multi-purpose discord bot for the sda server",
+  "main": "./src/bot/index.js",
   "dependencies": {
     "discord.js": "^13.7.0",
     "get-image-colors": "^4.0.1",

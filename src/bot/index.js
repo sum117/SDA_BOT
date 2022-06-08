@@ -2,7 +2,6 @@ const { Client } = require('discord.js');
 const client = new Client({ intents: 32767 });
 const config = require('../../config.json');
 
-
 //Event Handler
 const fs = require('fs');
 
@@ -36,5 +35,4 @@ for (let [k, v] of events) {
 }
 
 client.login(config.token);
-console.log(events);
 
