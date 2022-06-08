@@ -1,8 +1,3 @@
-const { Formatters, MessageEmbed, MessageActionRow, MessageSelectMenu, Modal, TextInputComponent, TextChannel, BaseCommandInteraction, Message} = require('discord.js');
-const {SlashCommandBuilder} = require('@discordjs/builders')
-const getColors = require('get-image-colors');
-const { options } = require('pg/lib/defaults');
-
 // Minhas funções pra facilitar o meu trabalho.
 /**
  * Função para converter milissegundos em duração.
@@ -24,7 +19,6 @@ function msToTime(ms) {
     else
         return days + " Dias";
 }
-exports.msToTime = msToTime;
 /**
  * Função para adicionar multiplas reações em uma mensagem.
  * @param {Object} msg O objeto da mensagem que será reagida.
@@ -36,7 +30,6 @@ function BulkEmoji(msg, Array) {
     for (each of Array)
         msg.react(each);
 }
-exports.BulkEmoji = BulkEmoji;
 /**
  * @author sum#0117 <github.com/sum117>
  * @license MIT
@@ -116,79 +109,8 @@ function clearMessages(channel, options) {
         pmsg.edit(newMsg);
     }
 }
-exports.clearMessages = clearMessages;
 ;
 
-/**
- * 
- * @param {import('discord.js').TextChannel} channel 
- * @param {String} name 
- * @param {String} avatar 
- * @param {String} message 
- */
-function createTupper(channel, name, avatar, message) {
-    channel.createWebhook(name, { avatar: avatar })
-        .then(webhook => {
-            webhook.send(message);
-            setTimeout(() => webhook.delete(), 5000);
-        })
-}
-exports.createTupper = createTupper;
-/**
- * @description Uma função para transformar uma string e um link em um embed completo. Demanda específica.
- * @param {import('discord.js').Message} msg Mensagem que irá virar embed.
- */
-function createDescEmbed(msg) {
-    return new Promise(resolve => {
-        const content = msg.content
-
-        if (content.includes('!embed')) {
-
-            const args = content.split('\n');
-            const parsed = args.shift();
-
-            if (parsed === '!embed') {
-                /**
-                 * @type {Array<String>}
-                 * @var unparsedTitle O título do Embed que virá do nome do canal.
-                 */
-                let unparsedTitle = msg.channel.name.split('-');
-                /**@type {Array<String>} @var parsedTitle Array que virá da função ForEach com a string capitalizada.*/
-                let parsedTitle = [];
-                unparsedTitle.forEach((word) => {
-                    if (word.match(/^d((o|a)s?|e)$/)) return parsedTitle.push(word);
-
-                    const newWord = word.charAt(0).toUpperCase() + word.slice(1);
-                    return parsedTitle.push(newWord);
-                });
-
-                const link = args.pop();
-                if (!link.includes('http')) throw new Error('Você não informou um link no último elemento do parâmetro.');
-
-                const color = () => getColors(link).then(color => color.map(color => color.hex())[0]);
-                let embed = new MessageEmbed()
-                    .setTitle(parsedTitle.join(' '))
-                    .setDescription(args.join('\n'))
-                    .setImage(link)
-                    .setAuthor({
-                        iconURL: msg.guild.iconURL({ dynamic: true, size: 1024 }),
-                        name: msg.channel.parent.name.slice(1).replace(/\| RP/, '')
-                    })
-                    .setFooter({
-                        text: '💡 Quer dar uma nova descrição ao canal? Contate os Admins!'
-                    });
-                color().then(color => {
-                    embed.setColor(color)
-                    resolve(msg.channel.send({
-                        content: 'Descrição atual produzida por ' + Formatters.userMention(msg.author.id),
-                        embeds: [embed]
-                    }));
-                })
-            }
-        }
-    });
-}
-exports.createDescEmbed = createDescEmbed;
 /**
  * @description Uma função para criar um formulário de criação de personagens, feita para preservar espaço em outros arquivos.
  * @param {BaseCommandInteraction} interaction A interação que gerará o formulário.
@@ -253,7 +175,6 @@ function createForm() {
 
     return form;
 }
-exports.createForm = createForm;
 /**
  * @description Função para gerar seletor de personagens feita para economizar espaço em outros arquivos.
  * @returns {MessageActionRow} Retorna uma array de action rows com três seletores para a ficha de personagem;
@@ -377,7 +298,6 @@ function createCharSelectors() {
     const actionRows = selectors.map(field => new MessageActionRow().addComponents(field));
     return actionRows;
 }
-exports.createCharSelectors = createCharSelectors;
 /**
  * @description Salva as últimas mensagens de um canal pra um arquivo de texto.
  * @param {Message} msg mensagem que receberá uma resposta com o resultado da função. 
@@ -393,53 +313,5 @@ async function saveToFile(msg, channelId) {
     });
     return response;
 }
-exports.saveToFile = saveToFile;
-/**
- * @description Função para a criação simples de um seletor do Discord.
- * @param {Array<String, {label: String, description:String, value?: String, emoji:String}>} argsArray
- * @returns {Array<MessageActionRow>} Um seletor com diversas opções.
- */
-function createRoleSelectors(argsArray) {
-    let rows = [];
-    for (each of argsArray) {
-        let i = 0;
-        const category = each[0];
 
-        const selector = new MessageSelectMenu()
-            .setCustomId(category)
-            .setPlaceholder(category);
-
-        for (each of each[1]) {
-            i++
-            selector.addOptions([
-                {
-                    label: each.label.charAt(0).toUpperCase() + each.label.slice(1),
-                    description: each.description,
-                    value: each?.value ?? each.label.toLowerCase(),
-                    emoji: each.emoji,
-                }
-            ]);
-        };
-         rows.push(new MessageActionRow().addComponents(selector.setMaxValues(i)));
-    };
-    return rows;
-}
-exports.createRoleSelectors = createRoleSelectors;
-
-function spawnHentai() {
-    const array = ['ass', 'bdsm', 'blowjob', 'cum', 'doujin', 'feet', 'femdom', 'foxgirl', 'gifs', 'glasses', 'hentai', 'netorare', 'maid', 'masturbation', 'orgy', 'panties', 'pussy', 'school', 'succubus', 'tentacles', 'thighs', 'uglyBastard', 'uniform', 'yuri', 'zettaiRyouiki'];
-    const command = new SlashCommandBuilder()
-        .setName('hentai')
-        .setDescription('Gere imagens hentai no canal NSFW.')
-        .addStringOption(option => {
-            option.setName('categoria')
-                .setDescription('Categoria do hentai')
-                .setRequired(true);
-            array.forEach(one => {
-                option.addChoices({name: one, value:one})
-            });
-            return option;
-        });
-    return command.toJSON();
-}
-exports.spawnHentai = spawnHentai;
+module.exports = saveToFile, msToTime, BulkEmoji, clearMessages, createForm, createCharSelectors;

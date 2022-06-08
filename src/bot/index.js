@@ -1,45 +1,38 @@
-const { Client, Options} = require('discord.js');
-const fs = require('fs');
-const client = new Client({
-	intents: 32767, 
-	makeCache: Options.cacheWithLimits({
-		...Options.defaultMakeCacheSettings, 
-		MessageManager: 1000
-	})
-})
-exports.client = client;
-
+const { Client } = require('discord.js');
+const client = new Client({ intents: 32767 });
 const config = require('../../config.json');
 
-const activityCache = new Map(); // Mapa que salva os jogadores ativos das ultimas 8 horas.
-exports.activityCache = activityCache;
-const guildInvites = new Map(); // Mapa para guardar o ID do servidor e os usos dos invites.
-exports.guildInvites = guildInvites;
-
-const presentationRole = '979506584772288562'; // Cargo de apresentações.
-exports.presentationRole = presentationRole;
-
-const presentationChannel = '977096309884473344'; // Canal de apresentações.
-exports.presentationChannel = presentationChannel;
-
-const generalChannel = '977081396839448596'; // Canal geral.
-exports.generalChannel = generalChannel;
-
-const mediaChannel = '977083633435279390'; // Canal de mídia.
-exports.mediaChannel = mediaChannel;
-
 //Event Handler
-const events = fs.readdirSync(`${__dirname}/events`).filter(file => file.endsWith('.js'));
+const fs = require('fs');
 
-for (e of events) {
-	const event = require(`./events/${e}`);
-	if (event.once) {
-		client.once(event.name, (...args) => event.execute(...args));
-	} else {
-		client.on(event.name, (...args) => event.execute(...args));
-	};
-};
+const events = new Map();
+fs.readdirSync(`${__dirname}/events`).filter(not => !not.includes('commandSystems'))
+	.forEach(event => {
+		const module = require(`./events/${event}/${event}`);
+		events.set(event, { name: module.name, execute: [module.execute] });
+	});
+fs.readdirSync(`${__dirname}/events/commandSystems`)
+	.forEach(system => {
+		const module = require(`./events/commandSystems/${system}`);
+
+		for (let [k, v] of module) {
+
+			if (!events.has(k)) events.set(k, { name: k, execute: [v] });
+			else {
+				let funcArray = events.get(k).execute;
+				funcArray.push(v);
+				events.set(k, { name: k, execute: funcArray });
+			}
+		};
+	});
+
+for (let [k, v] of events) {
+	client.on(k, (...args) => {
+		v.execute.forEach(func => {
+			func.apply(...args);
+		});
+	});
+}
 
 client.login(config.token);
-
 
