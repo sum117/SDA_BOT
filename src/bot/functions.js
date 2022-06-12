@@ -332,4 +332,4 @@ async function saveToFile(msg, channelId) {
   return response
 }
 
-module.exports = BulkEmoji, clearMessages, createForm, createCharSelectors, msToTime, saveToFile; 
+module.exports = {BulkEmoji, clearMessages, createForm, createCharSelectors, msToTime, saveToFile}; 

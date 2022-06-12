@@ -1,7 +1,7 @@
 const { mediaChannel, generalChannel } =
   require('../../../../../config.json').channels
 const { Formatters, MessageAttachment } = require('discord.js')
-const BulkEmoji = require('../../../functions')
+const {BulkEmoji} = require('../../../functions')
 
 module.exports = {
   type: 'prefixless',
