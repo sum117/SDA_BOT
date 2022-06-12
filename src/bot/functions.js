@@ -1,3 +1,4 @@
+const {Modal, TextInputComponent, MessageActionRow, MessageSelectMenu} = require('discord.js');
 // Minhas funções pra facilitar o meu trabalho.
 /**
  * Função para converter milissegundos em duração.
