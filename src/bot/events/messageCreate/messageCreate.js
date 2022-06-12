@@ -1,19 +1,23 @@
+const {activityCache} = require('../../index')
 module.exports = {
     name: 'messageCreate',
 
     async execute() {
+        activityCache.set(this.author.id, Date.now());
+
         const fs = require('fs');
-        const commands = fs.readdirSync(`${__dirname}/src/bot/events/interactionCreate/commands`).filter(file => file.endsWith('.js'));
+        const commands = fs.readdirSync(`${__dirname}/commands`).filter(file => file.endsWith('.js'));
+
         // Command Handler
         for (each of commands) {
-            const used = require(`./commands/${each}`);
-            if (this.content.match(`^!${used.prefix}`)) {
+            let used = require(`./commands/${each}`);
+            if (this.content.includes(used.prefix)) {
                 try {
                     used.execute(this);
                 } catch (error) {
                     this.reply('Infelizmente este comando deu erro, ou provavelmente não existe: ' + error);
                 };
-            } else used.execute(this);
+            } else if (used.type === 'prefixless') {used.execute(this)};
         };
     }
 };

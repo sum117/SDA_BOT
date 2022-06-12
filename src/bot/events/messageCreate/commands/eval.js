@@ -1,6 +1,7 @@
 module.exports = {
     type: 'prefix',
     prefix: 'eval',
+    name: 'Javascript Evaluator',
     description: 'Comando de administrador para executar JS direto do Discord.',
     execute(msg) {
         /**@type {String} */

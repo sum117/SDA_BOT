@@ -1,4 +1,4 @@
-const database = require('../../db')
+const database = require('../../db').presentation;
 const { presentationChannel, loginoutChannel } = require('../../../../config.json').channels;
 const { presentationRole } = require('../../../../config.json').roles;
 const {Formatters} = require('discord.js');
@@ -9,7 +9,7 @@ module.exports = new Map([
 ])
 
 function ready() {
-    database.presentation.sync();
+    database.sync();
 }
 
 async function messageCreate() {

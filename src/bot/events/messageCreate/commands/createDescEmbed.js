@@ -3,18 +3,16 @@ const { Formatters, MessageEmbed } = require('discord.js')
 module.exports = {
     type: 'prefix',
     prefix: 'embed',
+    name: 'Description Embed Generator',
     description: 'Comando de moderador para gerar descrições de canais.',
     execute(msg) {
-
         return new Promise(resolve => {
             const content = msg.content
-
-            if (content.includes(this.prefix)) {
-
+            if (content.includes('embed')) {
                 const args = content.split('\n');
                 const parsed = args.shift();
 
-                if (parsed === this.prefix) {
+                if (parsed.includes('embed')) {
                     /**
                      * @type {Array<String>}
                      * @var unparsedTitle O título do Embed que virá do nome do canal.
@@ -30,7 +28,7 @@ module.exports = {
                     });
 
                     const link = args.pop();
-                    if (!link.includes('http')) throw new Error('Você não informou um link no último elemento do parâmetro.');
+                    if (!link?.includes('http')) return msg.channel.send('❌ Você não informou um link no último elemento do parâmetro.');
 
                     const color = () => getColors(link).then(color => color.map(color => color.hex())[0]);
                     let embed = new MessageEmbed()

@@ -1,6 +1,9 @@
 const { Client } = require('discord.js');
 const client = new Client({ intents: 32767 });
+exports.client = client;
 const config = require('../../config.json');
+const activityCache = new Map();
+exports.activityCache = activityCache;
 
 //Event Handler
 const fs = require('fs');

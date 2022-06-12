@@ -4,7 +4,7 @@ const BulkEmoji = require('../../../functions');
 
 module.exports = {
     type: 'prefixless',
-    name: 'mediaModerator',
+    name: 'Media Moderator',
     description: 'Um comando automático do servidor que coloca as mensagens em seus devidos lugares.',
     execute(msg) {
         if (msg.channel.id === generalChannel && (msg.attachments.size >= 1 || msg.content.match(/https?/g))) {
