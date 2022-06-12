@@ -16,7 +16,7 @@ module.exports = {
         .get(mainGuild)
         .channels.cache.get(memberCountChannel)
       activityCache.forEach((time, user) => {
-        if (Date.now() - time > 8 * 360 * 1000) activityCache.delete(user)
+        if (Date.now() - time > 8 * 3600 * 1000) activityCache.delete(user)
       })
       memberCounter.edit({
         name: memberCounter.name.replace(/\d+/, activityCache.size),
