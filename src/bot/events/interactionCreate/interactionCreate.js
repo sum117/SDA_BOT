@@ -3,7 +3,7 @@ module.exports = {
   async execute() {
     const fs = require('fs')
     const commands = fs
-      .readdirSync(`${__dirname}/src/bot/events/interactionCreate/commands`)
+      .readdirSync(`${__dirname}/commands`)
       .filter((file) => file.endsWith('.js'))
     for (each of commands) {
       const used = require(`./commands/${each}`)
