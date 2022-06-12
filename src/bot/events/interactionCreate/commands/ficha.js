@@ -1,7 +1,7 @@
 const { createForm } = require('../../../functions')
 const fichaMap = new Map()
 const sessionChest = new Map()
-const {registerChannel} = require('../../../../config.json')
+const {registerChannel} = require('../../../../../config.json')
 module.exports = {
   type: 'MESSAGE_COMPONENT',
   execute(interaction) {
