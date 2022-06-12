@@ -6,6 +6,7 @@
 </div>
 
 ### Sumário
+
 - [Meu Propósito](#meu-propósito)
 - [O Que Posso Fazer](#o-que-posso-fazer)
 - [Servidor SDA](#servidor-sda)
@@ -20,6 +21,7 @@ Sou um bot de multi-propósito do Discord Open Source que é usado majoritariame
 <hr class="mt-1">
 
 ### O Que Posso Fazer
+
 - Crio um perfil inteiro, responsivo e editável para o seu personagem.
 - Permito que você envie mensagens COMO O SEU PERSONAGEM em embeds customizáveis.
 - Tenho funções de administração bem específicas que quebram um galho pra qualquer moderador.
@@ -32,6 +34,6 @@ Sou um bot de multi-propósito do Discord Open Source que é usado majoritariame
 
 ### Servidor SDA
 
-O Somas do Amanhã (SDA) é um servidor de RPG Literário, vulgo RPT (Roleplay por Texto) que utiliza de uma ferramenta automatizada, o SDA BOT para administrar sistemas usualmente administrados à mão e entregar uma experiência de RP sem igual para todos os usuários. 
+O Somas do Amanhã (SDA) é um servidor de RPG Literário, vulgo RPT (Roleplay por Texto) que utiliza de uma ferramenta automatizada, o SDA BOT para administrar sistemas usualmente administrados à mão e entregar uma experiência de RP sem igual para todos os usuários.
 
 O time do SDA tem em mente que existem vários servidores de RPT no Discord, por isso incluímos as nossas uniquidades como o SDA BOT para nos destacarmos entre eles.
