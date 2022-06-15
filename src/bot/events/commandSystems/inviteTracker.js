@@ -60,6 +60,6 @@ async function guildMemberAdd() {
 function inviteCreate(invite) {
   console.log('Novo convite salvo.')
   inviteCodeUses.set(invite.code, invite.uses)
-  guildInvites.set(mainGuild.id, inviteCodeUses)
+  guildInvites.set(mainGuild, inviteCodeUses)
   console.log(guildInvites)
 }
