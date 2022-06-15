@@ -1,6 +1,8 @@
 const guildInvites = new Map()
 const inviteCodeUses = new Map()
 const { mainGuild } = require('../../../../config.json')
+const {loginoutChannel} = require('../../../../config.json').channels
+const {client} = require('../../index');
 
 module.exports = new Map([
   ['ready', ready],
@@ -9,7 +11,7 @@ module.exports = new Map([
 ])
 
 function ready() {
-  this.guilds.fetch(mainGuild).then((guild) =>
+  client.guilds.fetch(mainGuild).then((guild) =>
     guild.invites.fetch().then((invites) => {
       console.log('Novos convites foram salvos.')
       invites.each((invite) => inviteCodeUses.set(invite.code, invite.uses))

@@ -1,7 +1,7 @@
 const { Message } = require('discord.js')
 const tuppers = require('../../../db.js').tuppers
 
-const regex = [/^!c(riar|reate)?/, /^!d(el)?(ete|etar)?/, /^!l(ista?)?/]
+const regex = [/^!c(riar|reate)?$/m, /^!d(el)?(ete|etar)?$/m, /^!l(ista?)?$/m]
 module.exports = {
   type: 'prefixless',
   name: 'Tupper Functions for SDA-BOT',
@@ -77,7 +77,7 @@ module.exports = {
             const msg = await tupper
               .send(content.slice(tupperMsg.prefix.length))
               .catch((err) => console.log(err))
-            if (msg) tupper.delete()
+            if (msg) setTimeout(() => tupper.delete(), 15 * 60 * 1000)
           })
         break
     }
