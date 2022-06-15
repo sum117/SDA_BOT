@@ -1,5 +1,6 @@
 const { Message } = require('discord.js')
 const tuppers = require('../../../db.js').tuppers
+const charCache = new Map()
 
 const regex = [/^!c(riar|reate)?$/m, /^!d(el)?(ete|etar)?$/m, /^!l(ista?)?$/m]
 module.exports = {
@@ -69,16 +70,30 @@ module.exports = {
         })
         if (!tupperMsg) return
         if (!tupperMsg.prefix) return
-        msg.channel
-          .createWebhook(tupperMsg.name, {
-            avatar: tupperMsg.thumbnail,
-          })
-          .then(async (tupper) => {
-            const msg = await tupper
-              .send(content.slice(tupperMsg.prefix.length))
-              .catch((err) => console.log(err))
-            if (msg) setTimeout(() => tupper.delete(), 15 * 60 * 1000)
-          })
+
+        if (!charCache.get(msg.author.id)) {
+          msg.channel
+            .createWebhook(tupperMsg.name, {
+              avatar: tupperMsg.thumbnail,
+            })
+            .then((webhook) => {
+              charCache.set(msg.author.id, webhook)
+              webhook.send(msg.content.slice(tupperMsg.prefix.length))
+            })
+        } else {
+          const char = charCache.get(msg.author.id)
+          if (char.channelId != msg.channel.id) {
+            msg.channel
+              .createWebhook(tupperMsg.name, {
+                avatar: tupperMsg.thumbnail,
+              })
+              .then((webhook) => {
+                charCache.set(msg.author.id, webhook)
+                webhook.send(msg.content.slice(tupperMsg.prefix.length))
+              })
+          } else char.send(msg.content.slice(tupperMsg.prefix.length))
+        } 
+
         break
     }
   },
