@@ -1,6 +1,6 @@
 const database = require('../../db').presentation
-const { presentationChannel, loginoutChannel } =
-  require('../../../../config.json').channels
+const { presentationChannel, loginoutChannel } = require('../../../../config.json').channels
+const { mainGuild } = require('../../../../config.json')
 const { presentationRole } = require('../../../../config.json').roles
 const { Formatters } = require('discord.js')
 const {msToTime} = require('../../functions');
