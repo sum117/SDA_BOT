@@ -1,4 +1,4 @@
-const { entranceChannel } = require('../../../../../config.json').channels
+const { entranceChannel, generalChannel } = require('../../../../../config.json').channels
 const { botId } = require('../../../../../config.json')
 module.exports = {
   type: 'prefixless',

@@ -3,6 +3,7 @@ const { presentationChannel, loginoutChannel } =
   require('../../../../config.json').channels
 const { presentationRole } = require('../../../../config.json').roles
 const { Formatters } = require('discord.js')
+const {msToTime} = require('../../functions');
 module.exports = new Map([
   ['ready', ready],
   ['messageCreate', messageCreate],
@@ -60,7 +61,7 @@ async function guildMemberRemove() {
         )
     })
 
-  await this.guild.channels
+  await client.guilds.fetch(mainGuild).channels
     .fetch(loginoutChannel)
     .send(
       `🟥 O usuário ${this.user.username}, de ID ${this.id} com \`${msToTime(
