@@ -4,6 +4,7 @@ const { presentationChannel, loginoutChannel } =
 const { presentationRole } = require('../../../../config.json').roles
 const { Formatters } = require('discord.js')
 const {msToTime} = require('../../functions');
+const {client} =require('../../index')
 module.exports = new Map([
   ['ready', ready],
   ['messageCreate', messageCreate],
