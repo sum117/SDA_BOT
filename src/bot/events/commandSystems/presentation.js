@@ -62,9 +62,12 @@ async function guildMemberRemove() {
         )
     })
 
-  await client.guilds.fetch(mainGuild).channels
+  const mg = await client.guilds.fetch(mainGuild)
+
+  const chan = await mg.channels
     .fetch(loginoutChannel)
-    .send(
+
+    chan.send(
       `🟥 O usuário ${this.user.username}, de ID ${this.id} com \`${msToTime(
         Date.now() - this.joinedTimestamp,
       )}\` de servidor saiu.`,
