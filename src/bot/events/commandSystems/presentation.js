@@ -48,9 +48,8 @@ async function messageCreate() {
 }
 
 async function guildMemberRemove() {
-  const chan = await this.guild.channels.fetch(loginoutChannel)
 
-  database.presentation
+  database
     .findOne({ where: { userID: BigInt(this.id) } })
     .then((presentation) => {
       this.guild.channels
