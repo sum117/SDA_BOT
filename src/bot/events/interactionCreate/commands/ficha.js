@@ -1,6 +1,7 @@
 const {createForm}  = require('../../../functions')
 const fichaMap = new Map()
 const sessionChest = new Map()
+exports.sessionChest = sessionChest;
 const {registerChannel} = require('../../../../../config.json')
 module.exports = {
   type: 'MESSAGE_COMPONENT',

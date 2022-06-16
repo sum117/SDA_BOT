@@ -142,14 +142,14 @@ function createForm() {
     .setMaxLength(4000)
   optionsArray.push(persoPersonalidade)
 
-  const persoHistoria = new TextInputComponent()
+  const persoFisico = new TextInputComponent()
     .setRequired(true)
-    .setCustomId('persoHistoria')
-    .setLabel('História')
+    .setCustomId('persoFisico')
+    .setLabel('Características Físicas')
     .setStyle('PARAGRAPH')
-    .setPlaceholder('Seja Interessante...')
+    .setPlaceholder('Peso, Altura, Aparência geral e etc...')
     .setMaxLength(4000)
-  optionsArray.push(persoHistoria)
+  optionsArray.push(persoFisico)
 
   const persoPoder = new TextInputComponent()
     .setRequired(true)
@@ -332,5 +332,13 @@ async function saveToFile(msg, channelId) {
     })
   return response
 }
-
-module.exports = {BulkEmoji, clearMessages, createForm, createCharSelectors, msToTime, saveToFile}; 
+/**
+ * 
+ * @param {string} str A string a ser capitalizada.
+ * @returns uma string em formato de titulo.
+ */
+function title (str) {
+  str.charAt(0).toUpperCase() + str.slice(1);
+  return str
+}
+module.exports = {BulkEmoji, clearMessages, createForm, createCharSelectors, msToTime, saveToFile, title}; 

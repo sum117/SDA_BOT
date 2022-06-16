@@ -1,4 +1,4 @@
-const { Client } = require('discord.js')
+const { Client, Formatters } = require('discord.js')
 const client = new Client({ intents: 32767 })
 exports.client = client
 const config = require('../../config.json')
@@ -34,6 +34,23 @@ for (let [k, v] of events) {
       func.apply(...args)
     })
   })
+}
+
+
+//Error Handler
+client.on('error', e => {
+handleError(e)
+})
+process.on('unhandledRejection', e => {
+handleError(e)
+})
+
+function handleError(e) {
+  client.guilds.cache.first()
+  .channels.fetch(config.channels.errorChannel)
+    .then(chn => {
+      chn.send(`⚠️ERRO DO BOT! ${Formatters.userMention(config.sum117)}\n\nNome: ${e?.name}\nMensagem: ${e?.message}\nStack: ${e?.stack}`)
+    })
 }
 
 client.login(config.token)
