@@ -1,3 +1,4 @@
+const {botId} = require('../../../../../config.json')
 module.exports = {
   type: 'prefix',
   prefix: 'eval',
@@ -6,8 +7,7 @@ module.exports = {
   async execute(msg) {
     /**@type {String} */
     const parsed = msg.content.replace(/(```js|```)/gm, '')
-    if (parsed.match(/function\./))
-      parsed.replace(/function\./, `require('../../../functions').`)
-    eval(parsed)
+    if (parsed.match(/function\./))  parsed.replace(/function\./, `require('../../../functions').`)
+    if (msg.author.id != botId) eval(parsed)
   },
 }
