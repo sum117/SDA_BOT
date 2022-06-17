@@ -39,10 +39,10 @@ for (let [k, v] of events) {
 
 //Error Handler
 client.on('error', e => {
-handleError(e)
+  handleError(e)
 })
 process.on('unhandledRejection', e => {
-handleError(e)
+  handleError(e)
 })
 
 function handleError(e) {
