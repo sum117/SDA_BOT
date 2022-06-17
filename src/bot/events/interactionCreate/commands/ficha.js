@@ -1,7 +1,8 @@
 const {createForm}  = require('../../../functions')
+const { Collection } = require('discord.js')
 const fichaMap = new Map()
-const sessionChest = new Map()
-exports.sessionChest = sessionChest;
+const {client} = require('../../../index')
+client.sessionChest = new Collection()
 const {registerChannel} = require('../../../../../config.json')
 module.exports = {
   type: 'MESSAGE_COMPONENT',
@@ -30,7 +31,7 @@ module.exports = {
       fichaMap.set(interaction.userId, cachedChoices)
       console.log(cachedChoices)
       if (cachedChoices.size === 3) {
-        sessionChest.set(interaction.user.id, cachedChoices)
+        client.sessionChest.set(interaction.user.id, cachedChoices)
         fichaMap.delete(interaction.user.id)
         return interaction.showModal(createForm())
       }

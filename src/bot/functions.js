@@ -338,7 +338,6 @@ async function saveToFile(msg, channelId) {
  * @returns uma string em formato de titulo.
  */
 function title (str) {
-  str.charAt(0).toUpperCase() + str.slice(1);
-  return str
+  return str.charAt(0).toUpperCase() + str.slice(1);
 }
 module.exports = {BulkEmoji, clearMessages, createForm, createCharSelectors, msToTime, saveToFile, title}; 

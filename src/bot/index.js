@@ -49,7 +49,7 @@ function handleError(e) {
   client.guilds.cache.first()
   .channels.fetch(config.channels.errorChannel)
     .then(chn => {
-      chn.send(`⚠️ERRO DO BOT! ${Formatters.userMention(config.sum117)}\n\nNome: ${e?.name}\nMensagem: ${e?.message}\nStack: ${e?.stack}`)
+      chn.send(`⚠️ERRO DO BOT! ${Formatters.userMention(config.sum117)}\n\nNome: ${e.name}\nMensagem: ${e.message}\nStack: ${e.stack}`)
     })
 }
 

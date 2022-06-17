@@ -70,7 +70,7 @@ module.exports = {
         })
         if (!tupperMsg) return
         if (!tupperMsg.prefix) return
-
+        msg.delete().catch(err => console.log(err))
         if (!charCache.get(msg.author.id)) {
           msg.channel
             .createWebhook(tupperMsg.name, {
