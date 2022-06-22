@@ -3,13 +3,12 @@
   "description": "multi-purpose discord bot for the sda server",
   "main": "./src/bot/index.js",
   "dependencies": {
-    "akaneko": "^5.2.3",
-    "discord.js": "^13.7.0",
+    "discord.js": "^13.8.0",
     "get-image-colors": "^4.0.1",
     "nodemon": "^2.0.16",
     "pg": "^8.7.3",
     "pg-hstore": "^2.3.4",
-    "sequelize": "^6.20.0"
+    "sequelize": "^6.21.0"
   },
   "scripts": {
     "dev": "nodemon ./src/bot/index.js"
